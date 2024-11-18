@@ -16,5 +16,5 @@
 <ul>
     <li>cd kaena</li>
     <li>pip install -r requirements.txt</li>
-    <li>find_interesting_users.py</li>
+    <li>python find_interesting_users.py</li>
 </ul>
