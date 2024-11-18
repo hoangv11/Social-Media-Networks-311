@@ -4,53 +4,69 @@ import matplotlib.pyplot as plt
 import re
 
 def generate_wordcloud(users, posts, include_keywords=None, exclude_keywords=None, user_attributes=None):
-    # Text storage for word cloud
-    text = ""  
-
+    """
+    Generate a word cloud from posts with specified filters.
+    
+    """
+    # Convert keywords to lowercase for case-insensitive comparison
+    include_keywords = [k.lower() for k in (include_keywords or [])]
+    exclude_keywords = [k.lower() for k in (exclude_keywords or [])]
+    
     # Filter users by attributes
     filtered_users = users
     if user_attributes:
         filtered_users = [
             user for user in users
-            if all(getattr(user, attr, None) == value for attr, value in user_attributes.items())
+            if all(getattr(user, attr) == value for attr, value in user_attributes.items())
         ]
 
-    # Collect posts authored by filtered users
-    filtered_posts = [
-        post for post in posts
-        if post.creator in filtered_users
-    ]
-
-    # Apply filters for keywords
-    for post in filtered_posts:
+    # Collect and filter posts
+    text_contents = []
+    for post in posts:
+        if post.creator not in filtered_users:
+            continue
+            
         content = post.content.lower()
-        if include_keywords and not any(keyword.lower() in content for keyword in include_keywords):
+        
+        # Check include keywords
+        if include_keywords and not any(keyword in content for keyword in include_keywords):
             continue
-        if exclude_keywords and any(keyword.lower() in content for keyword in exclude_keywords):
+            
+        # Check exclude keywords
+        if exclude_keywords and any(keyword in content for keyword in exclude_keywords):
             continue
-        text += f" {content}"
+            
+        text_contents.append(content)
 
-    # Return if there are no words
-    if not text.strip():
-        print("No words to generate word cloud")
-        return
+    # Return if no content matches filters
+    if not text_contents:
+        print("No content matches the specified filters")
+        return None
 
-    # Clean text
-    text = re.sub(r'\W+', ' ', text) 
+    # Join all content with spaces and clean text
+    text = " ".join(text_contents)
+    text = re.sub(r'\W+', ' ', text)
 
     # Generate Word Cloud
-    wordcloud = WordCloud(
-        background_color='white',
-        width=1000,
-        height=500
-    ).generate(text)
+    try:
+        wordcloud = WordCloud(
+            background_color='white',
+            width=1000,
+            height=500,
+            min_font_size=10,
+            max_font_size=100
+        ).generate(text)
 
-    # Display the word cloud
-    plt.figure(figsize=(12, 8))
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis('off')
-    plt.show()
-
+        # Display the word cloud
+        plt.figure(figsize=(12, 8))
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.show()
+        
+        return wordcloud
+    except Exception as e:
+        print(f"Error generating word cloud: {str(e)}")
+        return None
 
 # Example Usage
 if __name__ == "__main__":
