@@ -3,23 +3,11 @@ from classes import User, Post
 import matplotlib.pyplot as plt
 import re
 
-def generate_word_cloud(users, posts, include_keywords=None, exclude_keywords=None, user_attributes=None):
-    """
-    Generates a word cloud based on the dataset and filters.
+def generate_wordcloud(users, posts, include_keywords=None, exclude_keywords=None, user_attributes=None):
+    # Text storage for word cloud
+    text = ""  
 
-    Parameters:
-        users (list): List of User objects.
-        posts (list): List of Post objects.
-        include_keywords (list): List of keywords to filter posts to include.
-        exclude_keywords (list): List of keywords to filter posts to exclude.
-        user_attributes (dict): Filters for user attributes (e.g., age, gender, region).
-
-    Returns:
-        None: Displays the word cloud or a message if no data matches the criteria.
-    """
-    combined_text = ""  # Text storage for word cloud
-
-    # Filter users by attributes if provided
+    # Filter users by attributes
     filtered_users = users
     if user_attributes:
         filtered_users = [
@@ -33,32 +21,32 @@ def generate_word_cloud(users, posts, include_keywords=None, exclude_keywords=No
         if post.creator in filtered_users
     ]
 
-    # Apply keyword filters
+    # Apply filters for keywords
     for post in filtered_posts:
         content = post.content.lower()
         if include_keywords and not any(keyword.lower() in content for keyword in include_keywords):
             continue
         if exclude_keywords and any(keyword.lower() in content for keyword in exclude_keywords):
             continue
-        combined_text += f" {content}"
+        text += f" {content}"
 
-    # Check if there's any text to process
-    if not combined_text.strip():
-        print("No matching posts found. Unable to generate a word cloud.")
+    # Return if there are no words
+    if not text.strip():
+        print("No words to generate word cloud")
         return
 
-    # Clean and preprocess the text
-    combined_text = re.sub(r'\W+', ' ', combined_text)  # Remove special characters and punctuation
+    # Clean text
+    text = re.sub(r'\W+', ' ', text) 
 
-    # Generate the word cloud
+    # Generate Word Cloud
     wordcloud = WordCloud(
         background_color='white',
-        width=800,
-        height=400
-    ).generate(combined_text)
+        width=1000,
+        height=500
+    ).generate(text)
 
     # Display the word cloud
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 8))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis('off')
     plt.show()
@@ -79,7 +67,7 @@ if __name__ == "__main__":
     posts = [post1, post2, post3]
 
     # Generate word cloud with filters
-    generate_word_cloud(
+    generate_wordcloud(
         users=[user1, user2],
         posts=posts,
         include_keywords=["social", "technology"],
