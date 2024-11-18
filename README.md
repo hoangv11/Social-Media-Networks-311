@@ -1,5 +1,11 @@
 # Social-Media-Networks-311
  
+<h3>Folder <code>matthew</code></h3>
+<ul>
+    <li>cd matthew</li>
+    <li>pip install -r requirements.txt</li>
+    <li>python trending.py</li>
+</ul>
 <h3>Folder <code>lionel</code></h3>
 <ul>
     <li>cd lionel</li>
