@@ -12,3 +12,9 @@
     <li>pip install -r requirements.txt</li>
     <li>python generate_wordcloud.py</li>
 </ul>
+<h3>Folder <code>Kaena</code></h3>
+<ul>
+    <li>cd kaena</li>
+    <li>pip install -r requirements.txt</li>
+    <li>find_interesting_users.py</li>
+</ul>
