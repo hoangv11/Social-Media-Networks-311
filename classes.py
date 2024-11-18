@@ -1,3 +1,5 @@
+import datetime
+
 class User:
     def __init__(self, user_id, name=None, gender=None, age=None, country=None, region=None):
         self.user_id = user_id
@@ -34,8 +36,11 @@ class User:
         """Adds a post to the list of read posts."""
         self.read_posts.append(post)
 
+    def make_post(self, text, response_to=None):
+       (self.authored_posts).append(Post(self, text, response_to)
+
 class Post:
-    def __init__(self, creator, content, responding_to=None, time_and_date=None, seen_by=[]):
+    def __init__(self, creator, content, responding_to=None, time_and_date=datetime.now(timezone.utc), seen_by=[]):
         self.creator = creator  # User object who created the post
         self.content = content  # String representing the post's text
         self.responding_to = responding_to  # Post object this post responds to (if None, then this is not a Comment)
